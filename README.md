@@ -11,8 +11,8 @@ Description
 Dbus-codegen is a small command line tool that parses the DBus Introspection XML
 format and uses it to generate Python classes. The resulting classes will generate
 the same XML output when their `Introspect` method is called. The classes inherit
-from python-dbus's service.Object class, and have all methods, properties, and
-signals described in the xml, complete with type hints and the appropriate 
+from python-dbus's `service.Object` class, and have all methods, properties, and
+signals described in the XML, complete with type hints and the appropriate 
 python-dbus decorators.
 
 When invoked from the command line, codegen has two modes of operation: single-
@@ -22,6 +22,14 @@ enabled by giving the name of an output directory with `--dir`, each class gets
 its own file. The file names are taken from the interface names of the given
 interfaces, with any prefix common to all the interfaces stripped away.
 
+Requirements
+------------
+
+* Python 3.5+
+* SimpleTemplate (stpl)
+* python-dbus
+
+...and optionally, the Black code formatter.
 
 Usage
 -----
