@@ -1,0 +1,56 @@
+import dbus
+from dbus import service
+from typing import Dict, List, Tuple, Any
+
+<%
+if iface.properties:
+    include("property_exceptions.stpl")
+end
+%>
+
+class {{iface.name.split(".")[-1]}}(service.Object):
+    __iface = "{{iface.name}}"
+
+    def __init__(self, \\
+	% for prop in iface.properties:
+{{prop.name}}: {{prop.pytype}}, \\
+	%end
+*args, **kwargs):
+	% if iface.properties:
+        self._props = {
+		% for prop in iface.properties:
+            "{{prop.name}}": {"value": {{prop.name}}, "access": "{{prop.access}}"},
+		% end
+        }
+	% end
+        super().__init__(*args, **kwargs)
+
+
+<%
+if iface.properties:
+	include("property_methods.stpl")
+end
+%>
+
+% for prop in iface.properties:
+    @property
+    def {{prop.name}}(self) -> {{prop.pytype}}:
+        return self.Get(self.__iface, "{{prop.name}}")
+
+    @{{prop.name}}.setter
+    def set_{{prop.name}}(self, value: {{prop.pytype}}):
+        self.Set(self.__iface, "{{prop.name}}", value)
+
+% end
+% for method in iface.methods:
+    @service.method(__iface, "{{method.signature("in")}}", "{{method.signature("out")}}")
+    def {{method.name}}({{method.argstr("in")}}) -> {{method.argstr("out") or "None"}}:
+        return {{!method.valstr("out") or "None"}}
+
+% end
+% for signal in iface.signals:
+    @service.signal(__iface, "{{signal.signature()}}")
+    def {{signal.name}}({{signal.argstr()}}):
+        pass
+
+% end

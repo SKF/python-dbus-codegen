@@ -1,0 +1,25 @@
+    @service.method(dbus.PROPERTIES_IFACE, in_signature="s", out_signature="a{sv}")
+    def GetAll(self, interface_name):
+        if interface_name in (self.__iface, ""):
+            return {k: p["value"] for k, p in self._props.items() if "read" in p["access"]}
+        raise UnknownInterface(self.__iface, interface_name)
+
+    @service.method(dbus.PROPERTIES_IFACE, in_signature="ss", out_signature="v")
+    def Get(self, interface_name, property_name):
+        try:
+            return self.GetAll(interface_name)[property_name]
+        except KeyError:
+            raise UnknownProperty(self.__iface, property_name, "read")
+
+    @service.method(dbus.PROPERTIES_IFACE, in_signature="ssv")
+    def Set(self, iface_name, prop_name, prop_value):
+        if iface_name in (self.__iface, ""):
+            if prop_name not in self._props or "write" not in self._props[prop_name]["access"]:
+                raise UnknownProperty(self.__iface, prop_name, "write")
+            self._props[prop_name]["value"] = prop_value
+            self.PropertiesChanged(iface_name, {prop_name: prop_value}, [])
+        raise UnknownInterface(self.__iface, iface_name)
+
+    @service.signal(dbus.PROPERTIES_IFACE, signature="sa{sv}as")
+    def PropertiesChanged(self, iface_name, changed_properties, invalidated_properties):
+        pass
