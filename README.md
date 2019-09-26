@@ -20,7 +20,7 @@ interfaces, with any prefix common to all the interfaces stripped away.
 
 positional arguments:
 
-  src         xml file(s) to process (default stdin)
+    src         xml file(s) to process (default stdin)
 
 optional arguments:
 
@@ -29,7 +29,7 @@ optional arguments:
     --dir DIR   directory to write to in multi-file mode
     --fmt       format output (requires black)
 
-JET 2019-09
+*JET 2019-09*
 
 
 
