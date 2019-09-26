@@ -15,7 +15,7 @@ class {{iface.name.split(".")[-1]}}(service.Object):
 	% for prop in iface.properties:
 {{prop.name}}: {{prop.pytype}}, \\
 	%end
-*args, **kwargs):
+conn:dbus.Bus,  *args, **kwargs):
 	% if iface.properties:
         self._props = {
 		% for prop in iface.properties:
@@ -23,7 +23,7 @@ class {{iface.name.split(".")[-1]}}(service.Object):
 		% end
         }
 	% end
-        super().__init__(*args, **kwargs)
+        super().__init__(conn, object_path="{{"/" + iface.name.replace(".","/")}}", *args,**kwargs)
 
 
 <%
