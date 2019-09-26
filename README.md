@@ -2,6 +2,7 @@ dbus-codegen
 ============
 
 Usage:
+
 	python3 codegen [-h] [--out OUT] [--dir DIR] [--fmt] [src [src ...]]
 
 Given an XML file of the format output by DBus introspection, codegen will
@@ -18,9 +19,11 @@ its own file. The file names are taken from the interface names of the given
 interfaces, with any prefix common to all the interfaces stripped away.
 
 positional arguments:
+
   src         xml file(s) to process (default stdin)
 
 optional arguments:
+
     -h, --help  show this help message and exit
     --out OUT   filename to write to in single-file mode (default stdout)
     --dir DIR   directory to write to in multi-file mode
