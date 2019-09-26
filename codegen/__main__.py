@@ -52,11 +52,12 @@ def main():
     import argparse
     from sys import stderr, stdin, stdout
 
-    noblack = False
     try:
         import black
+
+        black_available = True
     except ImportError:
-        noblack = True
+        black_available = False
 
     parser = argparse.ArgumentParser(description=__doc__, epilog=__author__)
     parser.add_argument(
@@ -73,14 +74,7 @@ def main():
         help="filename to write to in single-file mode (default stdout)",
     )
     parser.add_argument("--dir", help="directory to write to in multi-file mode")
-    parser.add_argument(
-        "--fmt", help="format output (requires black)", action="store_true"
-    )
-
     args = parser.parse_args()
-    if args.fmt and noblack:
-        print("Cannot format if black is not installed!", file=stderr)
-        return 1
     if args.dir and not (path.exists(args.dir) and path.isdir(args.dir)):
         print("%s: no such directory" % args.dir, file=stderr)
         return 1
@@ -89,10 +83,9 @@ def main():
     for f in args.src:
         results = {**results, **render_template(f)}
 
-    if args.fmt:
-        results = {
-            k: black.format_str(v, mode=black.FileMode()) for k, v in results.items()
-        }
+    if black_available:
+        fm = black.FileMode()
+        results = {k: black.format_str(v, mode=fm) for k, v in results.items()}
 
     if args.dir:
         write_to_dir(results, args.dir)

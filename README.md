@@ -36,7 +36,7 @@ Usage
 
 ### Command line
 
-	python3 codegen [-h] [--out OUT] [--dir DIR] [--fmt] [src [src ...]]
+	python3 codegen [-h] [--out OUT] [--dir DIR] [src [src ...]]
 
 
 #### Positional arguments
@@ -48,4 +48,3 @@ Usage
     -h, --help  show this help message and exit
     --out OUT   filename to write to in single-file mode (default stdout)
     --dir DIR   directory to write to in multi-file mode
-    --fmt       format output (requires black)
